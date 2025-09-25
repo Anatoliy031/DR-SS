@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>С днём рождения, Святослав Михайлович!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Dancing+Script:wght@700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    :root{
+      --primary:#1a1a2e;
+      --secondary:#16213e;
+      --accent:#e94560;
+      --light:#f5f5f5;
+      --gold:#ffd700;
+      --blue:#2196F3;
+      --purple:#9C27B0;
+      --glass: rgba(255,255,255,0.08);
+      --glass-border: rgba(255,255,255,0.18);
+    }
+
+    body{
+      min-height:100vh;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 25%,#f093fb 50%,#f5576c 75%,#4facfe 100%);
+      background-size:400% 400%;
+      animation:gradientShift 15s ease infinite;
+      font-family:'Inter',system-ui,-apple-system,sans-serif;
+      overflow-x:hidden;
+      color:#fff;
+    }
+    @keyframes gradientShift{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+
+    /* Fireworks canvas */
+    #fireworksCanvas{
+      position:fixed;inset:0;width:100%;height:100%;
+      pointer-events:auto; /* клики добавляют залпы */
+      z-index:2;opacity:.7
+    }
+
+    /* stars */
+    .stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+    .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite}
+    @keyframes twinkle{0%,100%{opacity:0;transform:scale(1)}50%{opacity:1;transform:scale(1.2)}}
+
+    /* floating emoji */
+    .floating-elements{position:fixed;inset:0;pointer-events:none;z-index:1}
+    .floating-emoji{position:absolute;font-size:28px;animation:floatUp 16s linear infinite;opacity:.65}
+    @keyframes floatUp{
+      0%{bottom:-100px;transform:translateX(0) rotate(0)}
+      100%{bottom:calc(100% + 100px);transform:translateX(100px) rotate(360deg)}
+    }
+
+    .container{
+      position:relative;z-index:10;min-height:100vh;
+      display:flex;align-items:center;justify-content:center;padding:20px
+    }
+
+    .birthday-card{
+      width:min(980px,100%);background:var(--glass);backdrop-filter:blur(18px);
+      border:1px solid var(--glass-border);border-radius:28px;padding:36px;
+      box-shadow:0 24px 60px rgba(0,0,0,.35),0 0 90px rgba(255,215,0,.18),inset 0 0 24px rgba(255,255,255,.05);
+      transform:translateY(20px);opacity:0;animation:slideUp .9s ease-out .4s forwards;position:relative;overflow:hidden
+    }
+    @keyframes slideUp{to{transform:translateY(0);opacity:1}}
+
+    .birthday-card::before{
+      content:"";position:absolute;inset:-3px;border-radius:28px;padding:3px;
+      background:linear-gradient(45deg,#FFD700,#FF69B4,#00CED1,#FF6347,#98FB98,#FFD700);
+      background-size:300% 300%;
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;mask-composite:exclude;animation:borderAnim 3s linear infinite;opacity:.5
+    }
+    @keyframes borderAnim{0%{background-position:0% 50%}100%{background-position:100% 50%}}
+
+    .header{text-align:center;margin-bottom:22px;position:relative}
+    .badge{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 22px;
+      background:linear-gradient(135deg,var(--gold),#FFA500);border-radius:40px;
+      font-weight:800;font-size:13px;letter-spacing:1.4px;text-transform:uppercase;color:#1b1b1b;
+      box-shadow:0 5px 18px rgba(255,215,0,.4);animation:pulse 2.2s ease-in-out infinite;margin-bottom:14px
+    }
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+
+    .main-title{
+      font-family:'Montserrat',sans-serif;
+      font-size:clamp(2.2rem,6vw,4.3rem);
+      font-weight:900;
+      background:linear-gradient(45deg,#FFD700,#FFA500,#FF6347,#FF1493,#00CED1,#FFD700);
+      background-size:220% 220%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+      animation:titleGradient 3s ease-in-out infinite;margin-bottom:6px;line-height:1.08;
+      filter:drop-shadow(0 2px 10px rgba(0,0,0,.3))
+    }
+    @keyframes titleGradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    .subtitle{font-size:1.12rem;color:rgba(255,255,255,.9);font-weight:400;letter-spacing:1.2px;margin-bottom:20px}
+
+    /* avatar */
+    .avatar-section{display:flex;justify-content:center;margin:26px 0}
+    .avatar{
+      width:160px;height:160px;border-radius:50%;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,#667eea,#764ba2);
+      box-shadow:0 0 40px rgba(102,126,234,.55),0 0 80px rgba(102,126,234,.25);
+      animation:float 4s ease-in-out infinite
+    }
+    .avatar::before{
+      content:"";position:absolute;inset:-3px;border-radius:50%;padding:3px;
+      background:linear-gradient(45deg,#ffd700,#ff6b6b,#4ecdc4,#ffd700);
+      -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+      -webkit-mask-composite:xor;mask-composite:exclude;animation:rotate 3.2s linear infinite
+    }
+    @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @keyframes rotate{to{transform:rotate(360deg)}}
+    .avatar .initials{font-size:3rem;font-weight:800;color:#fff;z-index:1;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+
+    /* typewriter */
+    .typewriter-container{
+      background:rgba(233,69,96,.10);border:1px solid rgba(233,69,96,.28);
+      border-radius:14px;padding:18px;margin:18px 0;min-height:86px;display:flex;align-items:center;justify-content:center
+    }
+    .typewriter{font-size:1.08rem;font-weight:600;color:#ff6b6b;text-align:center;text-shadow:0 0 16px rgba(255,107,107,.45);width:100%;line-height:1.55}
+    .cursor{display:inline-block;width:2px;height:1.2em;background:#ff6b6b;margin-left:4px;animation:blink 1s infinite;vertical-align:text-bottom}
+    @keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+    .wrong{position:relative;color:#ff4757;text-decoration:line-through;text-decoration-thickness:2px;opacity:.75}
+
+    /* ACT document */
+    .act{
+      background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.2);border-radius:18px;padding:22px;position:relative;overflow:hidden
+    }
+    .act-header{
+      display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:8px
+    }
+    .act-title{font-weight:800;letter-spacing:.4px}
+    .act-sub{opacity:.9}
+    .stamp{
+      position:absolute;right:18px;top:18px;padding:8px 14px;border:2px solid rgba(255,255,255,.65);color:rgba(255,255,255,.85);
+      font-weight:900;letter-spacing:2px;border-radius:8px;transform:rotate(-10deg) scale(1);opacity:.0;animation:stampIn .9s .9s ease-out forwards
+    }
+    @keyframes stampIn{0%{opacity:0;transform:rotate(-10deg) scale(.6)}100%{opacity:.95;transform:rotate(-10deg) scale(1)}}
+    .act hr{border:none;height:1px;background:rgba(255,255,255,.25);margin:14px 0}
+    .act h3{font-size:1rem;margin:10px 0 6px;letter-spacing:.3px}
+    .act p,.act li{font-size:1.02rem;line-height:1.75;color:rgba(255,255,255,.96)}
+    .act ul{margin:8px 0 4px 0;padding-left:0;list-style:none}
+    .act li{position:relative;padding-left:22px}
+    .act li::before{content:"—";position:absolute;left:0;opacity:.9}
+    .highlight{color:var(--gold);font-weight:700;text-shadow:0 0 16px rgba(255,215,0,.45)}
+
+    .signature{text-align:center;font-size:1.15rem;font-weight:800;color:#ffd700;margin-top:18px;text-shadow:0 0 18px rgba(255,215,0,.5)}
+
+    /* overlay for sound unlock */
+    .sound-overlay{
+      position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:30;
+      background:rgba(0,0,0,.35);backdrop-filter:blur(2px)
+    }
+    .sound-overlay .bubble{
+      background:rgba(255,255,255,.9);color:#111;padding:12px 18px;border-radius:14px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.25)
+    }
+
+    /* responsive */
+    @media (max-width:768px){
+      .birthday-card{padding:26px 18px}
+      .main-title{font-size:2rem}
+      .avatar{width:140px;height:140px}
+      .avatar .initials{font-size:2.4rem}
+      .typewriter{font-size:1rem}
+      .act p,.act li{font-size:1rem}
+    }
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important;transition:none !important}
+    }
+  </style>
+</head>
+<body>
+  <!-- Fireworks -->
+  <canvas id="fireworksCanvas"></canvas>
+
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Floating emojis -->
+  <div class="floating-elements" id="floatingElements"></div>
+
+  <!-- Sound unlock overlay (покажется только если браузер заблокирует звук) -->
+  <div class="sound-overlay" id="soundOverlay">
+    <div class="bubble">🔊 Нажмите в любом месте, чтобы включить музыку</div>
+  </div>
+
+  <!-- Audio (несколько вариантов имён) -->
+  <audio id="backgroundMusic" preload="auto" autoplay muted playsinline loop>
+    <source src="./music.mp3" type="audio/mpeg">
+    <source src="./music.ogg" type="audio/ogg">
+    <source src="./music.wav" type="audio/wav">
+    <source src="./music.m4a" type="audio/mp4">
+    <source src="./birthday.mp3" type="audio/mpeg">
+    <source src="./birthday-music.mp3" type="audio/mpeg">
+    <source src="./happy-birthday.mp3" type="audio/mpeg">
+    <source src="./background.mp3" type="audio/mpeg">
+    <source src="./celebration.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <div class="birthday-card" id="card">
+      <div class="header">
+        <div class="badge">⭐ КОЛЛЕКТИВ ДРНУ ⭐</div>
+        <h1 class="main-title">🎉 С днём рождения, Святослав Михайлович! 🎂</h1>
+        <p class="subtitle">Надёжный, командный, «святой человек» — подхватывает вовремя, усиливает выручку</p>
+      </div>
+
+      <div class="avatar-section">
+        <div class="avatar" id="avatar"><span class="initials">СМ</span></div>
+      </div>
+
+      <!-- Typewriter шутливый прогрев -->
+      <div class="typewriter-container">
+        <div class="typewriter"><span id="typewriter-text"></span><span class="cursor"></span></div>
+      </div>
+
+      <!-- Акт-поздравление -->
+      <div class="act">
+        <div class="stamp">ОДОБРЕНО</div>
+        <div class="act-header">
+          <div class="act-title">АКТ №DR-Свят/25.09.2025</div>
+          <div class="act-sub">Предмет: праздничный инцидент с участием «святого человека»</div>
+        </div>
+        <hr>
+        <h3>Комиссия установила:</h3>
+        <ul>
+          <li>Все мероприятия выполнены в установленные сроки — реакция в пределах <span class="highlight">ДКП</span> (Достижимых Компетенций на Пределе).</li>
+          <li>Бездоговорной ВОЛС прячется, но палится: <span class="highlight">выявляемость — 100%</span>, прирост выручки — стабильно положительный.</li>
+          <li>Подразделениям по нетарифке оказана помощь уровня «<span class="highlight">24/7 без очереди</span>».</li>
+          <li>Командный дух — высок, коллектив — на связи, <span class="highlight">душа коллектива</span> — присутствует.</li>
+          <li>Ответственность — превышает норму, жалоб нет, только поздравления.</li>
+        </ul>
+        <p style="margin-top:8px">Вывод: <span class="highlight">святой человек</span> — не по званию, а по делам. Нимб не мешает каске, а дедлайны — графику доходов.</p>
+        <hr>
+        <h3>Пожелания от коллектива ДРНУ:</h3>
+        <ul>
+          <li>Пусть «бездоговорных» случаев остаётся только в торте, а договоров — <span class="highlight">жирных и вовремя</span>.</li>
+          <li>Чтобы дедлайны прилипали, как термоусадка к муфте, а план-факт радовал методологов.</li>
+          <li>Чтобы филиалы видели не просто опору, а <span class="highlight">оптический усилитель</span> добра и порядка.</li>
+          <li>И чтобы каждая ситуация «подхватил вовремя» превращалась в «успели и заработали».</li>
+        </ul>
+        <hr>
+        <p><b>Решение комиссии:</b> торжественно поздравить, вручить праздничную индульгенцию на торт и временно закрыть глаза на один «бездоговорной» кусок — при условии составления акта осмотра. 😄🎂</p>
+        <p style="margin-top:10px"><b>С праздником, Святослав Михайлович!</b></p>
+      </div>
+
+      <div class="signature">💖 С уважением, команда ДРНУ</div>
+    </div>
+  </div>
+
+<script>
+/* ===== Звёздное небо ===== */
+(function(){
+  const starsContainer = document.getElementById('stars');
+  const starCount = 90;
+  for(let i=0;i<starCount;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const size = Math.random()*2.6+0.6;
+    s.style.width = s.style.height = size+'px';
+    s.style.left = Math.random()*100+'%';
+    s.style.top  = Math.random()*100+'%';
+    s.style.animationDelay = (Math.random()*3)+'s';
+    s.style.animationDuration = (Math.random()*3+2)+'s';
+    starsContainer.appendChild(s);
+  }
+})();
+
+/* ===== Плавающие эмодзи ===== */
+(function(){
+  const c = document.getElementById('floatingElements');
+  const emojis = ['🎈','🎉','🎊','✨','🌟','💫','🎁','🎂'];
+  const count = 12;
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className='floating-emoji';
+    el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left = Math.random()*100+'%';
+    el.style.animationDelay = (Math.random()*14)+'s';
+    el.style.animationDuration = (14 + Math.random()*8)+'s';
+    c.appendChild(el);
+  }
+})();
+
+/* ===== Дата (не выводим отдельно, номер АКТа уже в тексте) ===== */
+
+/* ===== Аватар: автопоиск файла ===== */
+(function(){
+  const avatar = document.getElementById('avatar');
+  const initials = avatar.querySelector('.initials');
+  const names = ['svyatoslav','svyat','svyat_m','sm','photo','avatar'];
+  const exts = ['jpg','JPG','jpeg','JPEG','png','PNG','webp','WEBP'];
+  const urls = [];
+  names.forEach(n=>exts.forEach(e=>urls.push(`./${n}.${e}`)));
+  let i=0;
+  function tryLoad(){
+    if(i>=urls.length) return;
+    const img = new Image();
+    img.onload = function(){
+      initials.style.display='none';
+      img.style.cssText='position:absolute;width:100%;height:100%;object-fit:cover;border-radius:50%;z-index:0;';
+      avatar.appendChild(img);
+    };
+    img.onerror = ()=>{i++;tryLoad();};
+    img.src = urls[i];
+  }
+  setTimeout(tryLoad,120);
+})();
+
+/* ===== Typewriter мини-скетч ===== */
+(function(){
+  const el = document.getElementById('typewriter-text');
+  const phrases = [
+    ["Доклад: ", "обычный", "праздничный", " инцидент оформлен. 📝"],
+    ["Статус героя: ", "рядовой специалист", "святой человек", " (нимб совместим с каской). 😇⛑️"],
+    ["Выявляемость БД ВОЛС: ", "нерегулярная", "100%", " — выручка растёт! 📈"],
+    ["Режим помощи: ", "как получится", "24/7 без очереди", " — подхватывает вовремя. ⚡"]
+  ];
+  const typeDelay=55, eraseDelay=38, pauseBeforeErase=780, pauseAfter=1200;
+
+  async function typeText(text,start=0){
+    for(let i=start;i<text.length;i++){
+      el.textContent = text.slice(0,i+1);
+      await new Promise(r=>setTimeout(r,typeDelay));
+    }
+  }
+  function markWrong(prefix,wrong){
+    el.innerHTML = `${prefix}<span class="wrong" id="wrong-word">${wrong}</span>`;
+  }
+  async function eraseWrong(){
+    const span = document.getElementById('wrong-word'); if(!span) return;
+    let t = span.textContent;
+    while(t.length){
+      t = t.slice(0,-1); span.textContent = t;
+      await new Promise(r=>setTimeout(r,eraseDelay));
+    }
+    span.remove();
+  }
+  async function show([pre,wrong,right,suf]){
+    el.textContent='';
+    await typeText(pre+wrong);
+    await new Promise(r=>setTimeout(r,pauseBeforeErase));
+    markWrong(pre,wrong);
+    await new Promise(r=>setTimeout(r,260));
+    await eraseWrong();
+    await typeText(pre+right);
+    await typeText(pre+right+suf,(pre+right).length);
+    await new Promise(r=>setTimeout(r,pauseAfter));
+  }
+  (async function loop(){
+    let i=0; while(true){ await show(phrases[i%phrases.length]); i++; }
+  })();
+})();
+
+/* ===== Салют ===== */
+const canvas = document.getElementById('fireworksCanvas');
+const ctx = canvas.getContext('2d',{ alpha:true });
+let fireworks=[], particles=[];
+function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+resizeCanvas(); window.addEventListener('resize',resizeCanvas,{passive:true});
+
+class Particle{
+  constructor(x,y,color,velocity,size=2){
+    this.x=x;this.y=y;this.color=color;this.velocity=velocity;this.size=size;
+    this.opacity=1;this.decay=Math.random()*0.018+0.006;this.gravity=0.05;
+  }
+  update(){ this.x+=this.velocity.x; this.y+=this.velocity.y; this.velocity.y+=this.gravity; this.velocity.x*=0.99; this.opacity-=this.decay; }
+  draw(){
+    ctx.save(); ctx.globalAlpha=this.opacity; ctx.fillStyle=this.color; ctx.shadowBlur=10; ctx.shadowColor=this.color;
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); ctx.restore();
+  }
+}
+class Firework{
+  constructor(sx,sy,tx,ty){
+    this.x=sx; this.y=sy; this.sx=sx; this.sy=sy; this.tx=tx; this.ty=ty;
+    this.distanceToTarget=Math.hypot(tx-sx,ty-sy); this.distanceTraveled=0; this.trail=[]; this.trailLength=8;
+    this.angle=Math.atan2(ty-sy,tx-sx); this.speed=2.1; this.acceleration=1.05; this.color=`hsl(${Math.random()*360},100%,50%)`;
+  }
+  update(index){
+    this.trail.push({x:this.x,y:this.y}); if(this.trail.length>this.trailLength) this.trail.shift();
+    this.speed*=this.acceleration; const vx=Math.cos(this.angle)*this.speed; const vy=Math.sin(this.angle)*this.speed;
+    this.distanceTraveled=Math.hypot(this.x+vx-this.sx,this.y+vy-this.sy);
+    if(this.distanceTraveled>=this.distanceToTarget){ createParticles(this.tx,this.ty); fireworks.splice(index,1); }
+    else{ this.x+=vx; this.y+=vy; }
+  }
+  draw(){
+    ctx.strokeStyle=this.color; ctx.lineWidth=2;
+    for(let i=0;i<this.trail.length;i++){ ctx.save(); ctx.globalAlpha=i/this.trail.length; ctx.beginPath(); ctx.arc(this.trail[i].x,this.trail[i].y,1,0,Math.PI*2); ctx.fill(); ctx.restore(); }
+    ctx.save(); ctx.fillStyle=this.color; ctx.shadowBlur=18; ctx.shadowColor=this.color; ctx.beginPath(); ctx.arc(this.x,this.y,3,0,Math.PI*2); ctx.fill(); ctx.restore();
+  }
+}
+function createParticles(x,y){
+  const count=64+Math.floor(Math.random()*28), hue=Math.random()*360;
+  for(let i=0;i<count;i++){
+    const angle=(Math.PI*2/count)*i, velocity=Math.random()*2.8+1.8;
+    const color=`hsl(${hue+Math.random()*50-25},100%,${48+Math.random()*18}%)`;
+    particles.push(new Particle(x,y,color,{x:Math.cos(angle)*velocity*(0.55+Math.random()*0.9), y:Math.sin(angle)*velocity*(0.55+Math.random()*0.9)}, Math.random()*2+1));
+  }
+  for(let i=0;i<16;i++){
+    const angle=Math.random()*Math.PI*2, v=Math.random()*2;
+    particles.push(new Particle(x,y,'#ffffff',{x:Math.cos(angle)*v,y:Math.sin(angle)*v}, Math.random()+.5));
+  }
+}
+function randomBurst(){
+  fireworks.push(new Firework(Math.random()*canvas.width,canvas.height, Math.random()*canvas.width, Math.random()*canvas.height*0.55+50));
+}
+function launchInitial(){
+  for(let i=0;i<4;i++){ setTimeout(randomBurst, i*240); }
+}
+setInterval(()=>{ if(Math.random()<0.06) randomBurst(); }, 1500);
+
+function animate(){
+  ctx.fillStyle='rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  for(let i=fireworks.length-1;i>=0;i--){ fireworks[i].draw(); fireworks[i].update(i); }
+  for(let j=particles.length-1;j>=0;j--){ particles[j].draw(); particles[j].update(); if(particles[j].opacity<=0) particles.splice(j,1); }
+  requestAnimationFrame(animate);
+}
+animate();
+setTimeout(launchInitial, 1200);
+
+/* Клик по экрану добавляет залп */
+canvas.addEventListener('click',(e)=>{ fireworks.push(new Firework(Math.random()*canvas.width,canvas.height,e.clientX,e.clientY)); });
+
+/* ===== Музыка: автозапуск и «размьют» ===== */
+const bgm = document.getElementById('backgroundMusic');
+const overlay = document.getElementById('soundOverlay');
+let soundArmed = false;
+
+function tryPlay(unmute=false){
+  if(unmute){ bgm.muted=false; bgm.volume = 0.35; }
+  return bgm.play().then(()=>{
+    overlay.style.display='none';
+  }).catch(()=>{ /* игнорируем */ });
+}
+
+window.addEventListener('load', async ()=>{
+  bgm.volume = 0.0; // старт очень тихо
+  try{ await tryPlay(false); }catch(e){}
+  // через мгновение пытаемся «размьютить» и плавно поднять громкость
+  setTimeout(async ()=>{
+    if(bgm.paused){ overlay.style.display='flex'; return; }
+    bgm.muted=false;
+    let v=0.0;
+    const fade = setInterval(()=>{
+      v+=0.05; bgm.volume=Math.min(0.35,v);
+      if(v>=0.35) clearInterval(fade);
+    },120);
+  }, 900);
+});
+
+/* Если браузер всё-таки заблокировал звук — включаем по первому касанию в любом месте (без кнопок) */
+['pointerdown','keydown','touchstart','visibilitychange'].forEach(evt=>{
+  document.addEventListener(evt, async ()=>{
+    if(!soundArmed && (bgm.paused || bgm.muted)){
+      soundArmed = true;
+      overlay.style.display='none';
+      try{
+        bgm.muted=false; bgm.volume=0.35;
+        await bgm.play();
+      }catch(e){
+        overlay.style.display='flex';
+      } finally{
+        setTimeout(()=>{ soundArmed=false; },300);
+      }
+    }
+  }, {passive:true});
+});
+
+/* ===== 3D card tilt ===== */
+const card = document.getElementById('card');
+const container = document.querySelector('.container');
+container.addEventListener('mousemove',(e)=>{
+  const r=card.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+  const rx=(y-0.5)*10, ry=(x-0.5)*10;
+  card.style.transform=`perspective(1000px) rotateX(${-rx}deg) rotateY(${ry}deg)`;
+},{passive:true});
+container.addEventListener('mouseleave',()=>{ card.style.transform='perspective(1000px) rotateX(0) rotateY(0)'; });
+
+</script>
+</body>
+</html>
